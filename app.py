@@ -4,10 +4,10 @@ import pickle
 app = Flask(__name__)
 
 # Load the models
-with open("C:/Users/PYARE LAL/Multiple_Disease_Prediction_Model/diabetese_trained_model.pkl", 'rb') as f:
+with open("diabetese_trained_model.pkl", 'rb') as f:
     dia_model = pickle.load(f)
 
-with open("C:/Users/PYARE LAL/Multiple_Disease_Prediction_Model/heart_trained_model.pkl", 'rb') as f:
+with open("heart_trained_model.pkl", 'rb') as f:
     heart_model = pickle.load(f)
 
 # Diabetes Prediction API
