@@ -78,7 +78,6 @@ Pygments
 python-dateutil
 python-json-logger
 pytz
-pywin32
 pywinpty
 PyYAML
 pyzmq
@@ -114,4 +113,3 @@ websocket-client
 Werkzeug
 widgetsnbextension
 xgboost
-gunicorn
