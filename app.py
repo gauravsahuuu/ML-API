@@ -1,9 +1,7 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, make_response
 import pickle
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
 
 # Load the models
 with open("diabetese_trained_model.pkl", 'rb') as f:
@@ -12,9 +10,18 @@ with open("diabetese_trained_model.pkl", 'rb') as f:
 with open("heart_trained_model.pkl", 'rb') as f:
     heart_model = pickle.load(f)
 
+def add_cors_headers(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+    return response
+
 # Diabetes Prediction API
-@app.route('/predict_diabetes', methods=['POST'])
+@app.route('/predict_diabetes', methods=['POST', 'OPTIONS'])
 def predict_diabetes():
+    if request.method == "OPTIONS":
+        return add_cors_headers(make_response())
+    
     data = request.json
     features = [
         data['Pregnancies'], data['Glucose'], data['BloodPressure'],
@@ -25,11 +32,15 @@ def predict_diabetes():
     prediction = dia_model.predict([features])
     result = 'yes' if prediction[0] == 1 else 'no'
     
-    return jsonify({"diabetes_prediction": result})
+    response = jsonify({"diabetes_prediction": result})
+    return add_cors_headers(response)
 
 # Heart Disease Prediction API
-@app.route('/predict_heart', methods=['POST'])
+@app.route('/predict_heart', methods=['POST', 'OPTIONS'])
 def predict_heart():
+    if request.method == "OPTIONS":
+        return add_cors_headers(make_response())
+    
     data = request.json
     features = [
         data['age'], data['sex'], data['cp'], data['trestbps'],
@@ -40,7 +51,8 @@ def predict_heart():
     prediction = heart_model.predict([features])
     result = 'yes' if prediction[0] == 1 else 'no'
     
-    return jsonify({"heart_disease_prediction": result})
+    response = jsonify({"heart_disease_prediction": result})
+    return add_cors_headers(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
