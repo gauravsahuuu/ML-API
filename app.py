@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # Load the models
 with open("diabetese_trained_model.pkl", 'rb') as f:
